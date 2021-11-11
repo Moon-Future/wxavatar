@@ -1,0 +1,3 @@
+<cu-custom bgColor="bg-gradual-blue">
+  <view slot="content">美头秀秀</view>
+</cu-custom>
