@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "avatar": "/components/avatar/avatar",
+    "mask": "/components/mask/mask"
+  }
 }

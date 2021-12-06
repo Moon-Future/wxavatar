@@ -1,3 +1,17 @@
 <cu-custom bgColor="bg-gradual-blue">
   <view slot="content">美头秀秀</view>
 </cu-custom>
+
+
+<view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx)">
+  <avatar userInfo="{{userInfo}}"></avatar>
+  <view class="btn-group">
+    <block wx:if="{{!hasUserInfo}}">
+      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile" class="btn-item cu-btn line-blue"> 获取头像 </button>
+      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+    </block>
+    <button class="btn-item cu-btn line-blue">重置</button>
+  </view>
+</view>
+
+<mask></mask>

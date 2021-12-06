@@ -1,0 +1,87 @@
+Page {
+  overflow: hidden;
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aaa;
+  width: 256rpx;
+  position: relative;
+}
+
+.avatar-container.hidden {
+  overflow: hidden;
+}
+
+.userinfo-avatar {
+  overflow: hidden;
+  width: 256rpx;
+  height: 256rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+}
+
+.avatar-border {
+  border: 2px solid #e2950a;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.avatar-move {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed #bfbfbf;
+}
+
+.avatar-mask {
+  width: 100%;
+}
+
+.icon-move {
+  position: absolute;
+  width: 40rpx;
+}
+
+.icon-move-leftup {
+  top: -20rpx;
+  left: -20rpx;
+}
+
+.icon-move-rightup {
+  top: -20rpx;
+  right: -20rpx;
+}
+
+.icon-move-leftdown {
+  bottom: -20rpx;
+  left: -20rpx;
+}
+
+.icon-move-rightdown {
+  bottom: -20rpx;
+  right: -20rpx;
+}
+
+.icon-rotate {
+  position: absolute;
+  width: 50rpx;
+  top: -120rpx;
+  left: calc(50% - 25rpx);
+}
+
+.icon-rotate-line {
+  position: absolute;
+  height: 72rpx;
+  top: -72rpx;
+  left: 50%;
+  border-left: 2px dashed #bfbfbf;
+}

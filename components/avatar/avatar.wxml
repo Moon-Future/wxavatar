@@ -1,0 +1,76 @@
+<view class="avatar-container">
+	<image
+	 bindtap="bindViewTap"
+	 class="userinfo-avatar"
+	 src="{{userInfo.avatarUrl || '/static/images/avatar-default.png'}}"
+	 mode="widthFix"
+	/>
+	<!-- <view class="avatar-border"></view> -->
+	<view class="avatar-move" style="transform:scale({{maskInfo.scale}}) rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;opacity:{{maskInfo.opacity}}">
+		<image
+		 id="maskImage"
+		 bindtap="bindViewTap"
+		 class="avatar-mask"
+		 src="{{maskInfo.src}}"
+		 mode="widthFix"
+		 bindload="imgOnLoad"
+		 data-type="drag"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<image
+		 class="icon-move icon-move-leftup"
+		 src="/static/images/scale.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="scale"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<image
+		 class="icon-move icon-move-rightup"
+		 src="/static/images/scale.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="scale"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<image
+		 class="icon-move icon-move-leftdown"
+		 src="/static/images/scale.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="scale"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<image
+		 class="icon-move icon-move-rightdown"
+		 src="/static/images/scale.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="scale"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<image
+		 class="icon-rotate"
+		 src="/static/images/rotate.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="rotate"
+		 bindtouchstart="touchstart"
+		 bindtouchmove="touchmove"
+		 bindtouchend="touchend"
+		/>
+		<view class="icon-rotate-line" />
+	</view>
+	<!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" /> -->
+</view>
+

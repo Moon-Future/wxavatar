@@ -1,1 +1,19 @@
-/* pages/home/home.wxss */
+.userinfo {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-group {
+  position: absolute;
+  bottom: 20rpx;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-item {
+  width: initial !important;
+}
