@@ -6,10 +6,34 @@
   align-items: center;
 }
 
-.btn-group {
+.tools-wrapper {
   position: absolute;
-  bottom: 20rpx;
+  bottom: 0;
+  padding: 10rpx;
   width: 100%;
+  background: var(--ghostWhite);
+}
+
+.opacity-progress {
+  margin-bottom: 20rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.opacity-progress .opacity-btn {
+  width: 50rpx;
+  height: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.opacity-progress .cu-progress {
+  margin: 0 10rpx;
+}
+
+.btn-group {
   display: flex;
   justify-content: center;
 }

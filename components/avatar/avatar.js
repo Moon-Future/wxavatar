@@ -24,9 +24,15 @@ Component({
       left: 0,
       x: 0,
       y: 0,
+      X: 0, // 圆心
+      Y: 0, // 圆心
       scale: 1,
       angle: 0,
+      opacity: 1
     },
+    controlShow: false,
+    painterData: {},
+    saveImg: ''
   },
 
   /**
@@ -42,7 +48,9 @@ Component({
         angle: this.countDeg(maskInfo.x, maskInfo.y, clientX, clientY), // 移动前位置的角度
         r: this.getDistance(maskInfo.x, maskInfo.y, maskInfo.offsetLeft, maskInfo.offsetTop), // 半径
       }
+      this.setData({ controlShow: true })
     },
+
     touchmove(e) {
       const type = e.currentTarget.dataset.type
       const maskInfo = this.data.maskInfo
@@ -73,12 +81,13 @@ Component({
         maskInfo,
       })
     },
-    touchend(e) {},
+
     getDistance(cx, cy, pointer_x, pointer_y) {
       var ox = pointer_x - cx
       var oy = pointer_y - cy
       return Math.sqrt(ox * ox + oy * oy)
     },
+
     /*
      *参数1和2为图片圆心坐标
      *参数3和4为手点击的坐标
@@ -105,19 +114,104 @@ Component({
       }
       return angle
     },
+
     imgOnLoad(e) {
       const query = wx.createSelectorQuery().in(this)
       query
         .select('#maskImage')
         .boundingClientRect((rect) => {
+          console.log('rect111', rect)
           const maskInfo = this.data.maskInfo
           maskInfo.x = rect.left + rect.width / 2
           maskInfo.y = rect.top + rect.height / 2
+          maskInfo.X = maskInfo.x
+          maskInfo.Y = maskInfo.y
           maskInfo.offsetTop = rect.top
           maskInfo.offsetLeft = rect.left
           this.setData({ maskInfo })
         })
         .exec()
     },
+
+    // 复位
+    reset(src) {
+      const maskInfo = this.data.maskInfo
+      maskInfo.top = 0
+      maskInfo.left = 0
+      maskInfo.x = maskInfo.X
+      maskInfo.y = maskInfo.Y
+      maskInfo.scale = 1
+      maskInfo.angle = 0
+      maskInfo.opacity = 1
+      maskInfo.src = src || maskInfo.src
+      this.setData({ maskInfo })
+    },
+
+    hideControl() {
+      this.setData({ controlShow: false })
+    },
+
+    changeOpacity(opacity) {
+      const maskInfo = this.data.maskInfo
+      maskInfo.opacity = opacity
+      this.setData({ maskInfo })
+    },
+
+    savaAvatar() {
+      console.log('savaAvatar')
+      const maskInfo = this.data.maskInfo
+      const query = wx.createSelectorQuery().in(this)
+      query
+        .select('#maskImage')
+        .boundingClientRect((rect) => {
+          console.log('rect222', rect, maskInfo)
+          const painterData = {
+            width: '768rpx',
+            height: '768rpx',
+            opacity: 0.5,
+            views: [
+              {
+                type: 'image',
+                url: this.data.userInfo.avatarUrl || '/static/images/avatar-default.png',
+                css: {
+                  width: '768rpx',
+                  height: '768rpx'
+                }
+              },
+              {
+                type: 'image',
+                url: maskInfo.src,
+                css: {
+                  width: rect.width * 3 + 'px',
+                  height: rect.height * 3 + 'px',
+                  top: maskInfo.top * 3 + 'px',
+                  left: maskInfo.left * 3 + 'px',
+                  rotate: maskInfo.angle,
+                  opacity: 0.5
+                }
+              }
+            ]
+          }
+          this.setData({ painterData })
+        })
+        .exec()
+    },
+
+    onImgOK(e) {
+      console.log('onImgOK', e, e.detail.path)
+      const maskInfo = this.data.maskInfo
+      maskInfo.src = ''
+      this.setData({ saveImg: e.detail.path, maskInfo })
+      wx.saveImageToPhotosAlbum({
+        filePath: e.detail.path,
+        success(res) {
+          console.log('res', res)
+        }
+      })
+    },
+
+    onImgErr(e) {
+      console.log('onImgErr', e)
+    }
   },
 })

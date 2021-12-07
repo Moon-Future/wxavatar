@@ -4,14 +4,26 @@
 
 
 <view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx)">
-  <avatar userInfo="{{userInfo}}"></avatar>
-  <view class="btn-group">
-    <block wx:if="{{!hasUserInfo}}">
-      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile" class="btn-item cu-btn line-blue"> 获取头像 </button>
-      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
-    </block>
-    <button class="btn-item cu-btn line-blue">重置</button>
+  <avatar userInfo="{{userInfo}}" id="avatar"></avatar>
+  <view class="tools-wrapper">
+    <view class="opacity-progress" wx:if="{{opacityControl}}">
+      <button class="opacity-btn opacity-btn-minus" data-type="minus" bindtap="opacityChange">-</button>
+      <view class="cu-progress">
+        <view class="bg-yellow" style="width:{{opacity}}%;">{{opacity}}%</view>
+      </view>
+      <button class="opacity-btn opacity-btn-add" data-type="add" bindtap="opacityChange">+</button>
+    </view>
+    <view class="btn-group">
+      <block wx:if="{{!hasUserInfo && !userInfo.avatarUrl}}">
+        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile" class="btn-item cu-btn line-blue"> 获取头像 </button>
+        <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+      </block>
+      <button class="btn-item cu-btn line-blue" bindtap="reset">复位</button>
+      <button class="btn-item cu-btn line-blue" bindtap="hideControl">效果</button>
+      <button class="btn-item cu-btn line-blue" bindtap="opacityShow">透明度</button>
+      <button class="btn-item cu-btn line-blue" bindtap="savaAvatar">保存图片</button>
+    </view>
   </view>
 </view>
 
-<mask></mask>
+<mask bind:maskChange="maskChange"></mask>

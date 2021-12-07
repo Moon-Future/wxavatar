@@ -6,3 +6,30 @@
   height: 400rpx;
   background: #ffffff;
 }
+
+.mask-header {
+  background: var(--redShadow);
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 10rpx;
+}
+
+.mask-header .nav .cu-item {
+  height: initial;
+  line-height: initial;
+  padding: 10rpx;
+}
+
+.mask-body {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  height: 340rpx;
+  overflow: auto;
+}
+
+.mask-image {
+  width: 150rpx;
+  height: 150rpx;
+  padding: 10rpx;
+}

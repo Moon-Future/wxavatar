@@ -1,16 +1,17 @@
-<view class="avatar-container">
+<view class="avatar-container" style="overflow:{{controlShow ? 'initial' : 'hidden'}}">
 	<image
 	 bindtap="bindViewTap"
 	 class="userinfo-avatar"
-	 src="{{userInfo.avatarUrl || '/static/images/avatar-default.png'}}"
+	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default.png'}}"
 	 mode="widthFix"
 	/>
 	<!-- <view class="avatar-border"></view> -->
-	<view class="avatar-move" style="transform:scale({{maskInfo.scale}}) rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;opacity:{{maskInfo.opacity}}">
+	<view class="avatar-move {{controlShow ? 'avatar-border-line' : ''}}" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);scale:{{maskInfo.scale}};top:{{maskInfo.top}}px;left:{{maskInfo.left}}px">
 		<image
 		 id="maskImage"
 		 bindtap="bindViewTap"
 		 class="avatar-mask"
+		 style="opacity:{{maskInfo.opacity}}"
 		 src="{{maskInfo.src}}"
 		 mode="widthFix"
 		 bindload="imgOnLoad"
@@ -28,6 +29,7 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-move icon-move-rightup"
@@ -38,6 +40,7 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-move icon-move-leftdown"
@@ -48,6 +51,7 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-move icon-move-rightdown"
@@ -58,6 +62,7 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-rotate"
@@ -68,9 +73,12 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
 		/>
-		<view class="icon-rotate-line" />
+		<view class="icon-rotate-line" hidden="{{!controlShow}}" />
 	</view>
 	<!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" /> -->
 </view>
+
+<painter palette="{{painterData}}" bind:imgOK="onImgOK" bind:imgErr="onImgErr" />
 

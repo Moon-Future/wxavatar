@@ -1,3 +1,13 @@
 <view class="mask-container">
-  底部区域
+  <view class="mask-header">
+    <scroll-view scroll-x class="nav" scroll-with-animation scroll-left="{{scrollLeft}}">
+      <view class="cu-item {{index==tabCur?'text-green cur':''}}" wx:for="{{tabs}}" wx:key="index" data-index="{{index}}" bindtap="tabSelect">
+        {{item.name}}
+      </view>
+    </scroll-view>
+  </view>
+  <view class="mask-body">
+    <image class="mask-image" src="{{item.src}}" mode="aspectFit" wx:for="{{maskList}}" wx:key="index" data-index="{{index}}" bindtap="maskSelect"></image>
+    <!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image> -->
+  </view>
 </view>

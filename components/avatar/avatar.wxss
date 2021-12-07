@@ -39,6 +39,10 @@ Page {
   left: 0;
   width: 100%;
   height: 100%;
+  border: 1px dashed transparent;
+}
+
+.avatar-border-line {
   border: 1px dashed #bfbfbf;
 }
 

@@ -9,6 +9,8 @@ Page({
     hasUserInfo: false,
     canIUseGetUserProfile: false,
     CustomBar: app.globalData.CustomBar,
+    opacity: 100,
+    opacityControl: false
   },
 
   /**
@@ -41,5 +43,46 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  reset() {
+    this.setData({ opacity: 100 })
+    this.selectComponent('#avatar').reset()
+  },
+
+  hideControl() {
+    this.selectComponent('#avatar').hideControl()
+  },
+
+  maskChange(e) {
+    this.setData({ opacity: 100 })
+    this.selectComponent('#avatar').reset(e.detail.src)
+  },
+
+  opacityShow() {
+    this.setData({
+      opacityControl: !this.data.opacityControl
+    })
+  },
+
+  opacityChange(e) {
+    const type = e.currentTarget.dataset.type
+    const step = 10
+    let opacity = this.data.opacity
+    if (type === 'add') {
+      if (opacity < 100) {
+        opacity += step
+      }
+    } else {
+      if (opacity > 0) {
+        opacity -= step
+      }
+    }
+    this.setData({ opacity })
+    this.selectComponent('#avatar').changeOpacity(opacity / 100)
+  },
+
+  savaAvatar() {
+    this.selectComponent('#avatar').savaAvatar()
   }
 })
