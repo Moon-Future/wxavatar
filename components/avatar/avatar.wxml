@@ -82,3 +82,6 @@
 
 <painter palette="{{painterData}}" bind:imgOK="onImgOK" bind:imgErr="onImgErr" />
 
+<view class="wxml-to-canvas-container">
+	<wxml-to-canvas class="widget"></wxml-to-canvas>
+</view>

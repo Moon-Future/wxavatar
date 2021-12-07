@@ -1,3 +1,5 @@
+const { wxml, style } = require('../../utils/util.js')
+
 Component({
   options: {
     addGlobalClass: true,
@@ -28,11 +30,11 @@ Component({
       Y: 0, // 圆心
       scale: 1,
       angle: 0,
-      opacity: 1
+      opacity: 1,
     },
     controlShow: false,
     painterData: {},
-    saveImg: ''
+    saveImg: '',
   },
 
   /**
@@ -66,7 +68,7 @@ Component({
         maskInfo.scale = this.moveTouch.dis / this.startTouch.r
       } else if (type === 'rotate') {
         // 旋转
-        maskInfo.angle += this.moveTouch.angle - this.startTouch.angle 
+        maskInfo.angle += this.moveTouch.angle - this.startTouch.angle
         this.startTouch.angle = this.moveTouch.angle
       } else if (type === 'drag') {
         maskInfo.left += this.moveTouch.x - this.startTouch.x
@@ -76,7 +78,7 @@ Component({
         this.startTouch.x = clientX
         this.startTouch.y = clientY
       }
-      
+
       this.setData({
         maskInfo,
       })
@@ -159,6 +161,49 @@ Component({
 
     savaAvatar() {
       console.log('savaAvatar')
+      // const widget = this.selectComponent('.widget')
+      // const _wxml = wxml()
+      // const p1 = widget.renderToCanvas({
+      //   wxml: _wxml,
+      //   style,
+      // })
+      // p1.then((res) => {
+      //   this.container = res
+      //   console.log('container', res)
+      //   const p2 = widget.canvasToTempFilePath()
+      //   p2.then((res) => {
+      //     console.log('res', res)
+
+      //     const maskInfo = this.data.maskInfo
+      //     maskInfo.src = ''
+      //     this.setData({ saveImg: res.tempFilePath, maskInfo })
+      //     // this.setData(
+      //     //   {
+      //     //     src: res.tempFilePath,
+      //     //     width: this.container.layoutBox.width,
+      //     //     height: this.container.layoutBox.height,
+      //     //   },
+      //     //   function () {
+      //     //     wx.hideLoading()
+      //     //   }
+      //     // )
+      //   }).catch((fail) => {
+      //     wx.hideLoading()
+      //     wx.showToast({
+      //       icon: 'error',
+      //       title: '请稍后再试',
+      //     })
+      //   })
+      // }).catch((fail) => {
+      //   console.log('fail', fail)
+      //   wx.hideLoading()
+      //   wx.showToast({
+      //     icon: 'error',
+      //     title: '请稍后再试',
+      //   })
+      // })
+
+      // return
       const maskInfo = this.data.maskInfo
       const query = wx.createSelectorQuery().in(this)
       query
@@ -175,8 +220,8 @@ Component({
                 url: this.data.userInfo.avatarUrl || '/static/images/avatar-default.png',
                 css: {
                   width: '768rpx',
-                  height: '768rpx'
-                }
+                  height: '768rpx',
+                },
               },
               {
                 type: 'image',
@@ -187,10 +232,10 @@ Component({
                   top: maskInfo.top * 3 + 'px',
                   left: maskInfo.left * 3 + 'px',
                   rotate: maskInfo.angle,
-                  opacity: 0.5
-                }
-              }
-            ]
+                  filter: 'alpha(opacity=80)'
+                },
+              },
+            ],
           }
           this.setData({ painterData })
         })
@@ -206,12 +251,12 @@ Component({
         filePath: e.detail.path,
         success(res) {
           console.log('res', res)
-        }
+        },
       })
     },
 
     onImgErr(e) {
       console.log('onImgErr', e)
-    }
+    },
   },
 })

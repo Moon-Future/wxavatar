@@ -89,3 +89,8 @@ Page {
   left: 50%;
   border-left: 2px dashed #bfbfbf;
 }
+
+.wxml-to-canvas-container {
+  position: absolute;
+  left: -10000px;
+}
