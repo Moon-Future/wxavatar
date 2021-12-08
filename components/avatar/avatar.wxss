@@ -7,7 +7,7 @@ Page {
   flex-direction: column;
   align-items: center;
   color: #aaa;
-  width: 256rpx;
+  width: 100%;
   position: relative;
 }
 
@@ -17,8 +17,7 @@ Page {
 
 .userinfo-avatar {
   overflow: hidden;
-  width: 256rpx;
-  height: 256rpx;
+  width: calc(100vw - 100rpx);
   border-radius: 16rpx;
   background: #ffffff;
 }
@@ -37,17 +36,18 @@ Page {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 300rpx;
+  width: 300rpx;
   border: 1px dashed transparent;
 }
 
-.avatar-border-line {
-  border: 1px dashed #bfbfbf;
+.image-border-line {
+  border: 1px dashed #1296db;
 }
 
 .avatar-mask {
   width: 100%;
+  border: 1px dashed #1296db;
 }
 
 .icon-move {
@@ -73,21 +73,22 @@ Page {
 .icon-move-rightdown {
   bottom: -20rpx;
   right: -20rpx;
+  rotate: 90deg;
 }
 
 .icon-rotate {
   position: absolute;
-  width: 50rpx;
-  top: -120rpx;
-  left: calc(50% - 25rpx);
+  width: 30rpx;
+  top: -30rpx;
+  left: calc(50% - 15rpx);
 }
 
 .icon-rotate-line {
   position: absolute;
-  height: 72rpx;
-  top: -72rpx;
+  height: 0;
+  top: -20rpx;
   left: 50%;
-  border-left: 2px dashed #bfbfbf;
+  border-left: 1px dashed #1296db;
 }
 
 .wxml-to-canvas-container {

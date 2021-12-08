@@ -1,5 +1,3 @@
-const { wxml, style } = require('../../utils/util.js')
-
 Component({
   options: {
     addGlobalClass: true,
@@ -19,7 +17,7 @@ Component({
    */
   data: {
     maskInfo: {
-      src: '/static/images/mask-01.png',
+      src: '',
       offsetTop: 0,
       offsetLeft: 0,
       top: 0,
@@ -30,7 +28,7 @@ Component({
       Y: 0, // 圆心
       scale: 1,
       angle: 0,
-      opacity: 1,
+      opacity: 0.7,
     },
     controlShow: false,
     painterData: {},
@@ -159,104 +157,25 @@ Component({
       this.setData({ maskInfo })
     },
 
-    savaAvatar() {
-      console.log('savaAvatar')
-      // const widget = this.selectComponent('.widget')
-      // const _wxml = wxml()
-      // const p1 = widget.renderToCanvas({
-      //   wxml: _wxml,
-      //   style,
-      // })
-      // p1.then((res) => {
-      //   this.container = res
-      //   console.log('container', res)
-      //   const p2 = widget.canvasToTempFilePath()
-      //   p2.then((res) => {
-      //     console.log('res', res)
-
-      //     const maskInfo = this.data.maskInfo
-      //     maskInfo.src = ''
-      //     this.setData({ saveImg: res.tempFilePath, maskInfo })
-      //     // this.setData(
-      //     //   {
-      //     //     src: res.tempFilePath,
-      //     //     width: this.container.layoutBox.width,
-      //     //     height: this.container.layoutBox.height,
-      //     //   },
-      //     //   function () {
-      //     //     wx.hideLoading()
-      //     //   }
-      //     // )
-      //   }).catch((fail) => {
-      //     wx.hideLoading()
-      //     wx.showToast({
-      //       icon: 'error',
-      //       title: '请稍后再试',
-      //     })
-      //   })
-      // }).catch((fail) => {
-      //   console.log('fail', fail)
-      //   wx.hideLoading()
-      //   wx.showToast({
-      //     icon: 'error',
-      //     title: '请稍后再试',
-      //   })
-      // })
-
-      // return
+    async savaAvatar() {
+      const imageCanvas = this.selectComponent('#imageCanvas')
       const maskInfo = this.data.maskInfo
-      const query = wx.createSelectorQuery().in(this)
-      query
-        .select('#maskImage')
-        .boundingClientRect((rect) => {
-          console.log('rect222', rect, maskInfo)
-          const painterData = {
-            width: '768rpx',
-            height: '768rpx',
-            opacity: 0.5,
-            views: [
-              {
-                type: 'image',
-                url: this.data.userInfo.avatarUrl || '/static/images/avatar-default.png',
-                css: {
-                  width: '768rpx',
-                  height: '768rpx',
-                },
-              },
-              {
-                type: 'image',
-                url: maskInfo.src,
-                css: {
-                  width: rect.width * 3 + 'px',
-                  height: rect.height * 3 + 'px',
-                  top: maskInfo.top * 3 + 'px',
-                  left: maskInfo.left * 3 + 'px',
-                  rotate: maskInfo.angle,
-                  filter: 'alpha(opacity=80)'
-                },
-              },
-            ],
-          }
-          this.setData({ painterData })
+      const avatarInfo = {
+        src: this.data.userInfo.avatarUrl
+      }
+      try {
+        const src = await imageCanvas.saveImage(avatarInfo, maskInfo)
+        maskInfo.src = ''
+        this.setData({ saveImg: src, maskInfo })
+        wx.saveImageToPhotosAlbum({
+          filePath: src,
+          success(res) {
+            console.log('res', res)
+          },
         })
-        .exec()
-    },
-
-    onImgOK(e) {
-      console.log('onImgOK', e, e.detail.path)
-      const maskInfo = this.data.maskInfo
-      maskInfo.src = ''
-      this.setData({ saveImg: e.detail.path, maskInfo })
-      wx.saveImageToPhotosAlbum({
-        filePath: e.detail.path,
-        success(res) {
-          console.log('res', res)
-        },
-      })
-    },
-
-    onImgErr(e) {
-      console.log('onImgErr', e)
-    },
+      } catch (e) {
+        console.log(e)
+      }
+    }
   },
 })

@@ -1,0 +1,6 @@
+.my-canvas {
+  position: absolute;
+  left: -10000px;
+  top: 50px;
+  background: #eee;
+}

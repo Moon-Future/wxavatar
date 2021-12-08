@@ -30,6 +30,10 @@ Page({
       desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
       success: (res) => {
         console.log(res)
+        const avatarUrlArr = res.userInfo.avatarUrl.split('/')
+        avatarUrlArr.pop()
+        avatarUrlArr.push('0')
+        res.userInfo.avatarUrl = avatarUrlArr.join('/')
         this.setData({
           userInfo: res.userInfo,
           hasUserInfo: true

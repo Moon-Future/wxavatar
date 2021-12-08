@@ -4,7 +4,7 @@
 
 
 <view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx)">
-  <avatar userInfo="{{userInfo}}" id="avatar"></avatar>
+  <avatar userInfo="{{userInfo}}" id="avatar" style="height:90%"></avatar>
   <view class="tools-wrapper">
     <view class="opacity-progress" wx:if="{{opacityControl}}">
       <button class="opacity-btn opacity-btn-minus" data-type="minus" bindtap="opacityChange">-</button>

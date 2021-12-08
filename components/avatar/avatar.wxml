@@ -2,16 +2,15 @@
 	<image
 	 bindtap="bindViewTap"
 	 class="userinfo-avatar"
-	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default.png'}}"
+	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default-1.png'}}"
 	 mode="widthFix"
 	/>
-	<!-- <view class="avatar-border"></view> -->
-	<view class="avatar-move {{controlShow ? 'avatar-border-line' : ''}}" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);scale:{{maskInfo.scale}};top:{{maskInfo.top}}px;left:{{maskInfo.left}}px">
+	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px">
 		<image
 		 id="maskImage"
 		 bindtap="bindViewTap"
-		 class="avatar-mask"
-		 style="opacity:{{maskInfo.opacity}}"
+		 class="avatar-mask {{controlShow ? 'image-border-line' : ''}}"
+		 style="scale:{{maskInfo.scale}};opacity:{{maskInfo.opacity}}"
 		 src="{{maskInfo.src}}"
 		 mode="widthFix"
 		 bindload="imgOnLoad"
@@ -19,39 +18,6 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		 bindtouchend="touchend"
-		/>
-		<image
-		 class="icon-move icon-move-leftup"
-		 src="/static/images/scale.png"
-		 mode="widthFix"
-		 lazy-load="false"
-		 data-type="scale"
-		 bindtouchstart="touchstart"
-		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
-		 hidden="{{!controlShow}}"
-		/>
-		<image
-		 class="icon-move icon-move-rightup"
-		 src="/static/images/scale.png"
-		 mode="widthFix"
-		 lazy-load="false"
-		 data-type="scale"
-		 bindtouchstart="touchstart"
-		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
-		 hidden="{{!controlShow}}"
-		/>
-		<image
-		 class="icon-move icon-move-leftdown"
-		 src="/static/images/scale.png"
-		 mode="widthFix"
-		 lazy-load="false"
-		 data-type="scale"
-		 bindtouchstart="touchstart"
-		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
-		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-move icon-move-rightdown"
@@ -77,11 +43,6 @@
 		/>
 		<view class="icon-rotate-line" hidden="{{!controlShow}}" />
 	</view>
-	<!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload="" /> -->
 </view>
 
-<painter palette="{{painterData}}" bind:imgOK="onImgOK" bind:imgErr="onImgErr" />
-
-<view class="wxml-to-canvas-container">
-	<wxml-to-canvas class="widget"></wxml-to-canvas>
-</view>
+<drawImage id="imageCanvas" />

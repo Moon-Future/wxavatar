@@ -1,7 +1,6 @@
 {
   "component": true,
   "usingComponents": {
-    "painter": "/components/painter/painter",
-    "wxml-to-canvas": "wxml-to-canvas"
+    "drawImage": "/components/drawImage/drawImage"
   }
 }
