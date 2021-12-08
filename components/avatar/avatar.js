@@ -18,6 +18,8 @@ Component({
   data: {
     maskInfo: {
       src: '',
+      w: 0,
+      h: 0,
       offsetTop: 0,
       offsetLeft: 0,
       top: 0,
@@ -29,6 +31,21 @@ Component({
       scale: 1,
       angle: 0,
       opacity: 0.7,
+      turnFlag: false // 镜像翻转
+    },
+    scaleIcon: {
+      bottom: -5,
+      _bottom: -5,
+      right: -10,
+      _right: -10
+    },
+    rotateIcon: {
+      top: -16,
+      _top: -16
+    },
+    turnIcon: {
+      left: -8,
+      _left: -8
     },
     controlShow: false,
     painterData: {},
@@ -53,7 +70,7 @@ Component({
 
     touchmove(e) {
       const type = e.currentTarget.dataset.type
-      const maskInfo = this.data.maskInfo
+      const { maskInfo, scaleIcon, rotateIcon, turnIcon } = this.data
       const { clientX, clientY } = e.touches[0]
       this.moveTouch = {
         x: clientX,
@@ -64,6 +81,10 @@ Component({
       if (type === 'scale') {
         // 缩放
         maskInfo.scale = this.moveTouch.dis / this.startTouch.r
+        scaleIcon.right = scaleIcon._right + maskInfo.w * (1 - maskInfo.scale) / 2
+        scaleIcon.bottom = scaleIcon._bottom + maskInfo.h * (1 - maskInfo.scale) / 2
+        rotateIcon.top = rotateIcon._top + maskInfo.h * (1 - maskInfo.scale) / 2
+        turnIcon.left = turnIcon._left + maskInfo.w * (1 - maskInfo.scale) / 2
       } else if (type === 'rotate') {
         // 旋转
         maskInfo.angle += this.moveTouch.angle - this.startTouch.angle
@@ -76,9 +97,11 @@ Component({
         this.startTouch.x = clientX
         this.startTouch.y = clientY
       }
-
       this.setData({
         maskInfo,
+        scaleIcon,
+        rotateIcon,
+        turnIcon
       })
     },
 
@@ -122,6 +145,8 @@ Component({
         .boundingClientRect((rect) => {
           console.log('rect111', rect)
           const maskInfo = this.data.maskInfo
+          maskInfo.w = rect.width
+          maskInfo.h = rect.height
           maskInfo.x = rect.left + rect.width / 2
           maskInfo.y = rect.top + rect.height / 2
           maskInfo.X = maskInfo.x
@@ -135,7 +160,7 @@ Component({
 
     // 复位
     reset(src) {
-      const maskInfo = this.data.maskInfo
+      const { maskInfo, scaleIcon, rotateIcon } = this.data
       maskInfo.top = 0
       maskInfo.left = 0
       maskInfo.x = maskInfo.X
@@ -143,14 +168,25 @@ Component({
       maskInfo.scale = 1
       maskInfo.angle = 0
       maskInfo.opacity = 1
+      maskInfo.turnFlag = false
       maskInfo.src = src || maskInfo.src
-      this.setData({ maskInfo })
+      scaleIcon.bottom = scaleIcon._bottom
+      scaleIcon.right = scaleIcon._right
+      rotateIcon.top = rotateIcon._top
+      this.setData({
+        maskInfo,
+        scaleIcon,
+        rotateIcon,
+        controlShow: true
+      })
     },
 
+    // 隐藏拖拽框
     hideControl() {
       this.setData({ controlShow: false })
     },
 
+    // 改变透明度
     changeOpacity(opacity) {
       const maskInfo = this.data.maskInfo
       maskInfo.opacity = opacity
@@ -176,6 +212,16 @@ Component({
       } catch (e) {
         console.log(e)
       }
+    },
+
+    maskClick() {},
+
+    // 镜像翻转
+    turnMask() {
+      const maskInfo = this.data.maskInfo
+      maskInfo.turnFlag = !maskInfo.turnFlag
+      this.setData({ maskInfo })
     }
   },
+  
 })

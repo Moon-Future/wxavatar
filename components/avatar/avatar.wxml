@@ -1,44 +1,51 @@
 <view class="avatar-container" style="overflow:{{controlShow ? 'initial' : 'hidden'}}">
 	<image
-	 bindtap="bindViewTap"
 	 class="userinfo-avatar"
 	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default-1.png'}}"
 	 mode="widthFix"
 	/>
-	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px">
+	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px" catchtap="maskClick">
 		<image
 		 id="maskImage"
-		 bindtap="bindViewTap"
 		 class="avatar-mask {{controlShow ? 'image-border-line' : ''}}"
-		 style="scale:{{maskInfo.scale}};opacity:{{maskInfo.opacity}}"
+		 style="scale:{{maskInfo.scale}};opacity:{{maskInfo.opacity}};transform:rotateY({{maskInfo.turnFlag ? 180 : 0}}deg)"
 		 src="{{maskInfo.src}}"
 		 mode="widthFix"
 		 bindload="imgOnLoad"
 		 data-type="drag"
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
 		/>
 		<image
 		 class="icon-move icon-move-rightdown"
 		 src="/static/images/scale.png"
+		 style="bottom:{{scaleIcon.bottom}}px;right:{{scaleIcon.right}}px"
 		 mode="widthFix"
 		 lazy-load="false"
 		 data-type="scale"
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
 		 hidden="{{!controlShow}}"
 		/>
 		<image
 		 class="icon-rotate"
 		 src="/static/images/rotate.png"
+		 style="top:{{rotateIcon.top}}px"
 		 mode="widthFix"
 		 lazy-load="false"
 		 data-type="rotate"
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
-		 bindtouchend="touchend"
+		 hidden="{{!controlShow}}"
+		/>
+		<image
+		 class="icon-turn"
+		 src="/static/images/turn.png"
+		 style="left:{{turnIcon.left}}px"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="turn"
+		 bindtap="turnMask"
 		 hidden="{{!controlShow}}"
 		/>
 		<view class="icon-rotate-line" hidden="{{!controlShow}}" />

@@ -1,3 +1,7 @@
+Page {
+  overflow: hidden;
+}
+
 .userinfo {
   position: relative;
   display: flex;
