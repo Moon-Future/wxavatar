@@ -34,7 +34,6 @@
   left: 0;
   width: 300rpx;
   width: 300rpx;
-  border: 1px dashed transparent;
 }
 
 .avatar-mask {
@@ -68,20 +67,6 @@
 
 .icon-move-rightdown {
   rotate: 90deg;
-}
-
-.icon-rotate {
-  position: absolute;
-  width: 16px;
-  left: calc(50% - 15rpx);
-}
-
-.icon-rotate-line {
-  position: absolute;
-  height: 0;
-  top: -20rpx;
-  left: 50%;
-  border-left: 1px dashed #1296db;
 }
 
 .icon-turn {

@@ -18,6 +18,9 @@ Component({
   data: {
     maskInfo: {
       src: '',
+      avatarW: 0,
+      avatarTop: 0,
+      avatarLeft: 0,
       w: 0,
       h: 0,
       offsetTop: 0,
@@ -28,9 +31,11 @@ Component({
       y: 0,
       X: 0, // 圆心
       Y: 0, // 圆心
+      r: 0, // 半径
       scale: 1,
       angle: 0,
-      opacity: 0.7,
+      opacity: 1,
+      maskFlag: true,
       turnFlag: false // 镜像翻转
     },
     scaleIcon: {
@@ -38,10 +43,6 @@ Component({
       _bottom: -5,
       right: -10,
       _right: -10
-    },
-    rotateIcon: {
-      top: -16,
-      _top: -16
     },
     turnIcon: {
       left: -8,
@@ -63,14 +64,13 @@ Component({
         x: clientX, // 移动前坐标点
         y: clientY,
         angle: this.countDeg(maskInfo.x, maskInfo.y, clientX, clientY), // 移动前位置的角度
-        r: this.getDistance(maskInfo.x, maskInfo.y, maskInfo.offsetLeft, maskInfo.offsetTop), // 半径
       }
       this.setData({ controlShow: true })
     },
 
     touchmove(e) {
       const type = e.currentTarget.dataset.type
-      const { maskInfo, scaleIcon, rotateIcon, turnIcon } = this.data
+      const { maskInfo, scaleIcon, turnIcon } = this.data
       const { clientX, clientY } = e.touches[0]
       this.moveTouch = {
         x: clientX,
@@ -80,12 +80,10 @@ Component({
       }
       if (type === 'scale') {
         // 缩放
-        maskInfo.scale = this.moveTouch.dis / this.startTouch.r
+        maskInfo.scale = this.moveTouch.dis / maskInfo.r
         scaleIcon.right = scaleIcon._right + maskInfo.w * (1 - maskInfo.scale) / 2
         scaleIcon.bottom = scaleIcon._bottom + maskInfo.h * (1 - maskInfo.scale) / 2
-        rotateIcon.top = rotateIcon._top + maskInfo.h * (1 - maskInfo.scale) / 2
         turnIcon.left = turnIcon._left + maskInfo.w * (1 - maskInfo.scale) / 2
-      } else if (type === 'rotate') {
         // 旋转
         maskInfo.angle += this.moveTouch.angle - this.startTouch.angle
         this.startTouch.angle = this.moveTouch.angle
@@ -100,7 +98,6 @@ Component({
       this.setData({
         maskInfo,
         scaleIcon,
-        rotateIcon,
         turnIcon
       })
     },
@@ -138,6 +135,21 @@ Component({
       return angle
     },
 
+    avatarOnLoad(e) {
+      const maskInfo = this.data.maskInfo
+      if (maskInfo.avatarW) return
+      const query = wx.createSelectorQuery().in(this)
+      query
+        .select('#avatarImage')
+        .boundingClientRect((rect) => {
+          maskInfo.avatarW = rect.width
+          maskInfo.avatarTop = rect.top
+          maskInfo.avatarLeft = rect.left
+          this.setData({ maskInfo })
+        })
+        .exec()
+    },
+
     imgOnLoad(e) {
       const query = wx.createSelectorQuery().in(this)
       query
@@ -153,6 +165,7 @@ Component({
           maskInfo.Y = maskInfo.y
           maskInfo.offsetTop = rect.top
           maskInfo.offsetLeft = rect.left
+          maskInfo.r = this.getDistance(maskInfo.x, maskInfo.y, maskInfo.offsetLeft, maskInfo.offsetTop)
           this.setData({ maskInfo })
         })
         .exec()
@@ -160,7 +173,7 @@ Component({
 
     // 复位
     reset(src) {
-      const { maskInfo, scaleIcon, rotateIcon } = this.data
+      const { maskInfo, scaleIcon, turnIcon } = this.data
       maskInfo.top = 0
       maskInfo.left = 0
       maskInfo.x = maskInfo.X
@@ -172,11 +185,11 @@ Component({
       maskInfo.src = src || maskInfo.src
       scaleIcon.bottom = scaleIcon._bottom
       scaleIcon.right = scaleIcon._right
-      rotateIcon.top = rotateIcon._top
+      turnIcon.left = turnIcon._left
       this.setData({
         maskInfo,
         scaleIcon,
-        rotateIcon,
+        turnIcon,
         controlShow: true
       })
     },
@@ -200,15 +213,23 @@ Component({
         src: this.data.userInfo.avatarUrl
       }
       try {
-        const src = await imageCanvas.saveImage(avatarInfo, maskInfo)
-        maskInfo.src = ''
-        this.setData({ saveImg: src, maskInfo })
-        wx.saveImageToPhotosAlbum({
-          filePath: src,
-          success(res) {
-            console.log('res', res)
-          },
-        })
+        const query = wx.createSelectorQuery().in(this)
+        query
+          .select('#maskImage')
+          .boundingClientRect(async (rect) => {
+            console.log('555', rect)
+            const src = await imageCanvas.saveImage(avatarInfo, { ...maskInfo, left: rect.left - maskInfo.avatarLeft, top: rect.top - maskInfo.avatarTop })
+            maskInfo.src = ''
+            this.setData({ saveImg: src, maskInfo })
+          })
+          .exec()
+        
+        // wx.saveImageToPhotosAlbum({
+        //   filePath: src,
+        //   success(res) {
+        //     console.log('res', res)
+        //   },
+        // })
       } catch (e) {
         console.log(e)
       }

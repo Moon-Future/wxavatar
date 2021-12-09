@@ -36,8 +36,23 @@ Component({
         const image = this.canvas.createImage()
         image.src = params.src
         image.onload = () => {
-          ctx.globalAlpha = params.opacity || 1
-          ctx.drawImage(image, 0, 0, params.width || this.canvas.width, params.height || this.canvas.height)
+          if (params.maskFlag) {
+            const scale = params.scale * (this.canvas.width / params.avatarW)
+            const width = params.w * scale
+            const height = params.h * scale
+            const left = params.left + params.w * (1 - params.scale) / 2
+            const top = params.top + params.h * (1 - params.scale) / 2
+            console.log(left, top)
+            // 透明度
+            ctx.globalAlpha = params.opacity
+            // 旋转
+            ctx.translate(width / 2 + params.left * scale, height / 2 + params.top * scale)
+            ctx.rotate(params.angle * Math.PI / 180)
+            ctx.drawImage(image, -width / 2, -height / 2, width, height)
+          } else {
+            ctx.globalAlpha = 1
+            ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height)
+          }
           ctx.save()
           resolve()
         }

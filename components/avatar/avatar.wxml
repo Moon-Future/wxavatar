@@ -1,7 +1,9 @@
 <view class="avatar-container" style="overflow:{{controlShow ? 'initial' : 'hidden'}}">
 	<image
+		id="avatarImage"
 	 class="userinfo-avatar"
 	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default-1.png'}}"
+	 bindload="avatarOnLoad"
 	 mode="widthFix"
 	/>
 	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px" catchtap="maskClick">
@@ -28,17 +30,6 @@
 		 hidden="{{!controlShow}}"
 		/>
 		<image
-		 class="icon-rotate"
-		 src="/static/images/rotate.png"
-		 style="top:{{rotateIcon.top}}px"
-		 mode="widthFix"
-		 lazy-load="false"
-		 data-type="rotate"
-		 bindtouchstart="touchstart"
-		 bindtouchmove="touchmove"
-		 hidden="{{!controlShow}}"
-		/>
-		<image
 		 class="icon-turn"
 		 src="/static/images/turn.png"
 		 style="left:{{turnIcon.left}}px"
@@ -48,7 +39,6 @@
 		 bindtap="turnMask"
 		 hidden="{{!controlShow}}"
 		/>
-		<view class="icon-rotate-line" hidden="{{!controlShow}}" />
 	</view>
 </view>
 
