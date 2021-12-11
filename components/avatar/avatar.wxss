@@ -41,6 +41,13 @@
   border: 1px dashed transparent;
 }
 
+.avatar-mask-hide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}
+
 .image-border-line {
   border: 1px dashed #1296db;
 }

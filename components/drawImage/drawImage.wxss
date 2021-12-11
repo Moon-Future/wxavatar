@@ -3,4 +3,6 @@
   left: -10000px;
   top: 50px;
   background: #eee;
+  width: 640px;
+  height: 640px;
 }

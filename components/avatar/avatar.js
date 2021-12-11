@@ -20,7 +20,7 @@ Component({
       src: '',
       avatarW: 0,
       avatarTop: 0,
-      avatarLeft: 0,
+      avatarLeft: 0, // 头像 dom
       w: 0,
       h: 0,
       offsetTop: 0,
@@ -34,6 +34,7 @@ Component({
       r: 0, // 半径
       scale: 1,
       angle: 0,
+      angleHide: 0, // 辅助图片角度，为了计算 left
       opacity: 1,
       maskFlag: true,
       turnFlag: false // 镜像翻转
@@ -49,8 +50,7 @@ Component({
       _left: -8
     },
     controlShow: false,
-    painterData: {},
-    saveImg: '',
+    avatarDefault: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/default/avatar-detault.png'
   },
 
   /**
@@ -86,6 +86,7 @@ Component({
         turnIcon.left = turnIcon._left + maskInfo.w * (1 - maskInfo.scale) / 2
         // 旋转
         maskInfo.angle += this.moveTouch.angle - this.startTouch.angle
+        maskInfo.angleHide = -maskInfo.angle
         this.startTouch.angle = this.moveTouch.angle
       } else if (type === 'drag') {
         maskInfo.left += this.moveTouch.x - this.startTouch.x
@@ -180,6 +181,7 @@ Component({
       maskInfo.y = maskInfo.Y
       maskInfo.scale = 1
       maskInfo.angle = 0
+      maskInfo.angleHide = 0
       maskInfo.opacity = 1
       maskInfo.turnFlag = false
       maskInfo.src = src || maskInfo.src
@@ -210,27 +212,34 @@ Component({
       const imageCanvas = this.selectComponent('#imageCanvas')
       const maskInfo = this.data.maskInfo
       const avatarInfo = {
-        src: this.data.userInfo.avatarUrl
+        src: this.data.userInfo.avatarUrl || this.data.avatarDefault
       }
       try {
+        wx.showLoading({
+          title: '正在保存...',
+          mask: true
+        })
         const query = wx.createSelectorQuery().in(this)
         query
-          .select('#maskImage')
+          .select('#maskImageHide')
           .boundingClientRect(async (rect) => {
-            console.log('555', rect)
             const src = await imageCanvas.saveImage(avatarInfo, { ...maskInfo, left: rect.left - maskInfo.avatarLeft, top: rect.top - maskInfo.avatarTop })
-            maskInfo.src = ''
-            this.setData({ saveImg: src, maskInfo })
+            wx.saveImageToPhotosAlbum({
+              filePath: src,
+              success() {
+                wx.showToast({
+                  title: '保存成功',
+                  icon: 'none',
+                })
+              },
+              fail() {
+                wx.hideLoading()
+              }
+            })
           })
           .exec()
-        
-        // wx.saveImageToPhotosAlbum({
-        //   filePath: src,
-        //   success(res) {
-        //     console.log('res', res)
-        //   },
-        // })
       } catch (e) {
+        wx.hideLoading()
         console.log(e)
       }
     },

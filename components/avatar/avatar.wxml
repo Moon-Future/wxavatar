@@ -2,11 +2,11 @@
 	<image
 		id="avatarImage"
 	 class="userinfo-avatar"
-	 src="{{saveImg || userInfo.avatarUrl || '/static/images/avatar-default-1.png'}}"
+	 src="{{userInfo.avatarUrl || avatarDefault}}"
 	 bindload="avatarOnLoad"
 	 mode="widthFix"
 	/>
-	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="transform:rotate({{maskInfo.angle}}deg);top:{{maskInfo.top}}px;left:{{maskInfo.left}}px" catchtap="maskClick">
+	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px" catchtap="maskClick">
 		<image
 		 id="maskImage"
 		 class="avatar-mask {{controlShow ? 'image-border-line' : ''}}"
@@ -18,6 +18,15 @@
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		/>
+
+		<image
+		 id="maskImageHide"
+		 class="avatar-mask-hide"
+		 style="scale:{{maskInfo.scale}};rotate:{{maskInfo.angleHide}}deg"
+		 src="{{maskInfo.src}}"
+		 mode="widthFix"
+		/>
+
 		<image
 		 class="icon-move icon-move-rightdown"
 		 src="/static/images/scale.png"
