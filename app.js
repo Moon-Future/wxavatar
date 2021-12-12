@@ -1,4 +1,5 @@
-// app.js
+const { http } = require('./utils/http')
+wx.$http = http
 App({
   onLaunch() {
     // 展示本地存储能力
