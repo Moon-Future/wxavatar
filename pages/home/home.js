@@ -46,7 +46,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: '这里有好多圣诞帽~',
+      path: '/pages/home/home',
+      imageUrl: '/static/images/share.png'
+    }
   },
 
   reset() {

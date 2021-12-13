@@ -1,7 +1,7 @@
 // const HOST = 'http://192.168.31.44:5555'
 // const HOST = 'http://192.168.137.1:5555'
-const HOST = 'https://wxproject.cl8023.com'
 // const HOST = 'http://localhost:5555'
+const HOST = 'https://wxproject.cl8023.com'
 const baseUrl = `${HOST}/api/wxAvatar/`
 
 const API = {
