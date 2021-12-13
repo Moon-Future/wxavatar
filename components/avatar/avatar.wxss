@@ -39,6 +39,7 @@
   width: 100%;
   height: 0;
   border: 2px dashed transparent;
+  box-sizing: content-box;
 }
 
 .avatar-mask-hide {
@@ -55,6 +56,10 @@
 .icon-move {
   position: absolute;
   width: 40rpx;
+}
+
+.icon-move.mask-cover {
+  width: 80rpx;
 }
 
 .icon-move-leftup {
@@ -78,6 +83,11 @@
   right: -10px;
 }
 
+.icon-move-rightdown.mask-cover {
+  bottom: -10px;
+  right: -20px;
+}
+
 .icon-turn {
   position: absolute;
   width: 16px;
@@ -85,9 +95,21 @@
   left: -8px;
 }
 
+.icon-turn.mask-cover {
+  width: 32px;
+  top: calc(50% - 18px);
+  left: -18px;
+}
+
 .icon-delete {
   position: absolute;
   width: 16px;
   top: -8px;
   left: -8px;
+}
+
+.icon-delete.mask-cover {
+  width: 32px;
+  top: -16px;
+  left: -16px;
 }

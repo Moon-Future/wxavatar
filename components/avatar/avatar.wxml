@@ -1,4 +1,4 @@
-<view class="avatar-container" style="overflow:{{controlShow ? 'initial' : 'hidden'}}">
+<view class="avatar-container" style="overflow:{{index !== -1 ? 'initial' : 'hidden'}}">
 	<image
 		id="avatarImage"
 	 class="userinfo-avatar"
@@ -6,7 +6,7 @@
 	 bindload="avatarOnLoad"
 	 mode="widthFix"
 	/>
-	<view class="avatar-move" wx:for="{{maskList}}" wx:for-item="maskInfo" wx:key="index" style="scale:{{maskInfo.scale}};rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;z-index:{{maskInfo.zIndex}}" catchtap="maskClick">
+	<view class="avatar-move" wx:for="{{maskList}}" wx:for-item="maskInfo" wx:key="index" style="width:{{maskInfo.cover === 1 ? 'calc(100% + 4px)' : '300rpx'}};scale:{{maskInfo.scale}};rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;z-index:{{maskInfo.zIndex}}" catchtap="maskClick">
 		<image
 		 class="maskImage avatar-mask {{maskInfo.controlShow ? 'image-border-line' : ''}}"
 		 style="opacity:{{maskInfo.opacity}};transform:rotateY({{maskInfo.turnFlag ? 180 : 0}}deg)"
@@ -28,7 +28,7 @@
 		/>
 
 		<image
-		 class="icon-move icon-move-rightdown"
+		 class="icon-move icon-move-rightdown {{maskInfo.cover === 1 ? 'mask-cover' : ''}}"
 		 src="/static/images/scale.png"
 		 mode="widthFix"
 		 lazy-load="false"
@@ -39,7 +39,7 @@
 		 hidden="{{!maskInfo.controlShow}}"
 		/>
 		<image
-		 class="icon-turn"
+		 class="icon-turn {{maskInfo.cover === 1 ? 'mask-cover' : ''}}"
 		 src="/static/images/turn.png"
 		 mode="widthFix"
 		 lazy-load="false"
@@ -49,7 +49,7 @@
 		 hidden="{{!maskInfo.controlShow}}"
 		/>
 		<image
-		 class="icon-delete"
+		 class="icon-delete {{maskInfo.cover === 1 ? 'mask-cover' : ''}}"
 		 src="/static/images/delete.png"
 		 mode="widthFix"
 		 lazy-load="false"

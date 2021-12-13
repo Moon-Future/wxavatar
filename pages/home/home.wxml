@@ -1,9 +1,9 @@
 <!-- <cu-custom bgColor="bg-gradual-blue">
   <view slot="content">美头秀秀</view>
 </cu-custom> -->
+<view style="height:{{CustomBar}}px" bindtap="hideControl"></view>
 
-
-<view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx);margin-top:{{CustomBar}}px" bindtap="hideControl">
+<view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx)" bindtap="hideControl">
   <avatar class="component-avatar" userInfo="{{userInfo}}" id="avatar" bind:maskOpacity="maskOpacity"></avatar>
   <view class="tools-wrapper" catchtap="maskClick">
     <view class="opacity-progress" wx:if="{{opacityControl}}">

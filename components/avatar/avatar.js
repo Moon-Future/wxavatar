@@ -17,7 +17,8 @@ Component({
    */
   data: {
     maskList: [],
-    avatarDefault: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/default/avatar-detault.png'
+    avatarDefault: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/default/avatar-detault.png',
+    index: -1
   },
 
   lifetimes: {
@@ -48,7 +49,6 @@ Component({
         zIndex: -1,
         controlShow: false
       },
-      this.index = -1
       this.zIndexMax = 1
       this.maskId = 1
     }
@@ -76,9 +76,8 @@ Component({
         maskInfo.zIndex = this.zIndexMax
         this.zIndexMax++
       }
-      this.index = index
       this.maskOpacity(maskInfo.opacity * 100)
-      this.setData({ maskList })
+      this.setData({ maskList, index })
     },
 
     touchmove(e) {
@@ -184,22 +183,22 @@ Component({
     // 复位
     reset() {
       const maskList = this.data.maskList
-      if (this.index === -1) {
+      if (this.data.index === -1) {
         maskList.forEach(ele => {
           ele = this.maskInfoReset(ele)
           ele.zIndex = 1
         })
         this.zIndexMax = 1
       } else {
-        maskList[this.index] = this.maskInfoReset(maskList[this.index])
-        maskList[this.index].controlShow = true
+        maskList[this.data.index] = this.maskInfoReset(maskList[this.data.index])
+        maskList[this.data.index].controlShow = true
       }
       this.setData({ maskList })
     },
 
     maskInfoReset(maskInfo) {
-      maskInfo.top = 0
-      maskInfo.left = 0
+      maskInfo.top = maskInfo.cover === 1 ? -4 : 0
+      maskInfo.left = maskInfo.cover === 1 ? -4 : 0
       maskInfo.x = maskInfo.X
       maskInfo.y = maskInfo.Y
       maskInfo.scale = 1
@@ -212,7 +211,7 @@ Component({
     },
 
     // mask选择
-    maskSelect(src) {
+    maskSelect(data) {
       const maskInfo = JSON.parse(JSON.stringify(this.maskInfo))
       const maskList = this.data.maskList
       if (maskList.length >= 5) {
@@ -222,22 +221,27 @@ Component({
         })
         return
       }
-      if (this.index !== -1) {
+      if (this.data.index !== -1) {
         maskList.forEach(ele => {
           ele.controlShow = false
         })
       }
-      maskInfo.src = src
+      maskInfo.src = data.src
+      maskInfo.cover = data.cover
       maskInfo.zIndex = this.zIndexMax
       maskInfo.controlShow = true
       maskInfo.id = this.maskId
+      if (data.cover === 1) {
+        maskInfo.left = -4
+        maskInfo.top = -4
+      }
       maskList.push(maskInfo)
-      this.index = maskList.length - 1
       this.maskId++
       this.zIndexMax++
       this.maskOpacity(100)
       this.setData({
-        maskList
+        maskList,
+        index: maskList.length - 1
       })
     },
 
@@ -247,14 +251,13 @@ Component({
       maskList.forEach(ele => {
         ele.controlShow = false
       })
-      this.index = -1
       this.maskOpacity(100)
-      this.setData({ maskList })
+      this.setData({ maskList, index: -1 })
     },
 
     // 改变透明度
     changeOpacity(opacity) {
-      if (this.index === -1) {
+      if (this.data.index === -1) {
         wx.hideToast({
           title: '请先选中',
           icon: 'none'
@@ -262,7 +265,7 @@ Component({
         return
       }
       const maskList = this.data.maskList
-      const maskInfo = maskList[this.index]
+      const maskInfo = maskList[this.data.index]
       maskInfo.opacity = opacity
       this.setData({ maskList })
     },

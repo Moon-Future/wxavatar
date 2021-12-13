@@ -61,7 +61,7 @@ Component({
 
     maskSelect(e) {
       const index = e.currentTarget.dataset.index
-      this.triggerEvent('maskSelect', { src: this.data.maskList[index].src })
+      this.triggerEvent('maskSelect', { src: this.data.maskList[index] })
     },
 
     async getTabs() {
