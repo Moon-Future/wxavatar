@@ -58,9 +58,8 @@ Page({
     this.selectComponent('#avatar').hideControl()
   },
 
-  maskChange(e) {
-    this.setData({ opacity: 100 })
-    this.selectComponent('#avatar').reset(e.detail.src)
+  maskSelect(e) {
+    this.selectComponent('#avatar').maskSelect(e.detail.src)
   },
 
   opacityShow() {
@@ -86,7 +85,16 @@ Page({
     this.selectComponent('#avatar').changeOpacity(opacity / 100)
   },
 
+  // 切换mask时更新opacity
+  maskOpacity(e) {
+    this.setData({ opacity: e.detail.opacity })
+  },
+
   savaAvatar() {
     this.selectComponent('#avatar').savaAvatar()
+  },
+
+  maskClick() {
+    // 阻止冒泡
   }
 })

@@ -4,11 +4,11 @@
   left: 0;
   right: 0;
   height: 400rpx;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .mask-header {
-  background: var(--redShadow);
+  background: rgba(200, 200, 200, 0.8);
   height: 60rpx;
   line-height: 60rpx;
   padding: 0 10rpx;
@@ -32,4 +32,8 @@
   width: 150rpx;
   height: 150rpx;
   padding: 10rpx;
+}
+
+.mask-body .cu-load.over::after {
+	content: "暂无数据";
 }

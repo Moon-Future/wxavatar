@@ -6,23 +6,23 @@
 	 bindload="avatarOnLoad"
 	 mode="widthFix"
 	/>
-	<view class="avatar-move" wx:if="{{maskInfo.src}}" style="rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px" catchtap="maskClick">
+	<view class="avatar-move" wx:for="{{maskList}}" wx:for-item="maskInfo" wx:key="index" style="scale:{{maskInfo.scale}};rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;z-index:{{maskInfo.zIndex}}" catchtap="maskClick">
 		<image
-		 id="maskImage"
-		 class="avatar-mask {{controlShow ? 'image-border-line' : ''}}"
-		 style="scale:{{maskInfo.scale}};opacity:{{maskInfo.opacity}};transform:rotateY({{maskInfo.turnFlag ? 180 : 0}}deg)"
+		 class="maskImage avatar-mask {{maskInfo.controlShow ? 'image-border-line' : ''}}"
+		 style="opacity:{{maskInfo.opacity}};transform:rotateY({{maskInfo.turnFlag ? 180 : 0}}deg)"
 		 src="{{maskInfo.src}}"
 		 mode="widthFix"
 		 bindload="imgOnLoad"
 		 data-type="drag"
+		 data-index="{{index}}"
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
 		/>
 
 		<image
-		 id="maskImageHide"
+		 id="maskImageHide-{{maskInfo.id}}"
 		 class="avatar-mask-hide"
-		 style="scale:{{maskInfo.scale}};rotate:{{maskInfo.angleHide}}deg"
+		 style="rotate:{{maskInfo.angleHide}}deg"
 		 src="{{maskInfo.src}}"
 		 mode="widthFix"
 		/>
@@ -30,23 +30,33 @@
 		<image
 		 class="icon-move icon-move-rightdown"
 		 src="/static/images/scale.png"
-		 style="bottom:{{scaleIcon.bottom}}px;right:{{scaleIcon.right}}px"
 		 mode="widthFix"
 		 lazy-load="false"
 		 data-type="scale"
+		 data-index="{{index}}"
 		 bindtouchstart="touchstart"
 		 bindtouchmove="touchmove"
-		 hidden="{{!controlShow}}"
+		 hidden="{{!maskInfo.controlShow}}"
 		/>
 		<image
 		 class="icon-turn"
 		 src="/static/images/turn.png"
-		 style="left:{{turnIcon.left}}px"
 		 mode="widthFix"
 		 lazy-load="false"
 		 data-type="turn"
+		 data-index="{{index}}"
 		 bindtap="turnMask"
-		 hidden="{{!controlShow}}"
+		 hidden="{{!maskInfo.controlShow}}"
+		/>
+		<image
+		 class="icon-delete"
+		 src="/static/images/delete.png"
+		 mode="widthFix"
+		 lazy-load="false"
+		 data-type="delete"
+		 data-index="{{index}}"
+		 bindtap="deleteMask"
+		 hidden="{{!maskInfo.controlShow}}"
 		/>
 	</view>
 </view>

@@ -6,8 +6,9 @@
       </view>
     </scroll-view>
   </view>
-  <view class="mask-body">
+  <scroll-view class="mask-body" scroll-y='true' bindscrolltolower='lower' bindrefresherrefresh="refresh" refresher-triggered="{{isPull}}" refresher-enabled>
     <image class="mask-image" src="{{item.src}}" mode="aspectFit" wx:for="{{maskList}}" wx:key="index" data-index="{{index}}" bindtap="maskSelect"></image>
-    <!-- <image class="" src="" mode="aspectFit|aspectFill|widthFix" lazy-load="false" binderror="" bindload=""></image> -->
-  </view>
+    <view class="cu-load {{loading ? 'loading' : ''}}"></view>
+    <view class="cu-load {{!loading && maskList.length === 0 ? 'over' : ''}}"></view>
+  </scroll-view>
 </view>

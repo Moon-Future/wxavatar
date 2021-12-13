@@ -1,5 +1,9 @@
 Page {
   overflow: hidden;
+  background-image: url(https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/background/bg-01.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% 100%;
 }
 
 .userinfo {
@@ -10,19 +14,31 @@ Page {
   align-items: center;
 }
 
+.component-avatar {
+  height: calc(100% - 80rpx);
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  position: absolute;
+  top: 0;
+}
+
 .tools-wrapper {
+  height: 80rpx;
   position: absolute;
   bottom: 0;
   padding: 10rpx;
   width: 100%;
-  background: var(--ghostWhite);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .opacity-progress {
-  margin-bottom: 20rpx;
-  position: relative;
+  position: absolute;
   display: flex;
   align-items: center;
+  bottom: 90rpx;
+  left: 10rpx;
+  right: 10rpx;
 }
 
 .opacity-progress .opacity-btn {

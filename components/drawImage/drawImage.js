@@ -42,6 +42,7 @@ Component({
         const image = this.canvas.createImage()
         image.src = params.src
         image.onload = () => {
+          ctx.setTransform(1, 0, 0, 1, 0, 0)
           if (params.maskFlag) {
             const ratio = this.canvas.width / params.avatarW
             const scale = params.scale * ratio
@@ -63,20 +64,22 @@ Component({
               ctx.rotate(params.angle * Math.PI / 180)
               ctx.drawImage(image, -width / 2, -height / 2, width, height)
             }
+            ctx.restore()
           } else {
             ctx.globalAlpha = 1
             ctx.drawImage(image, 0, 0, this.canvas.width, this.canvas.height)
           }
-          ctx.save()
           resolve()
         }
       })
     },
-    async saveImage(avatarInfo, maskInfo) {
+    async saveImage(avatarInfo, maskList) {
       this.reset()
       return new Promise(async (resolve, reject) => {
         await this.drawImage(avatarInfo)
-        await this.drawImage(maskInfo)
+        for (let i = 0, len = maskList.length; i < len; i++) {
+          await this.drawImage(maskList[i])
+        }
         wx.canvasToTempFilePath({
           canvasId: 'myCanvas',
           canvas: this.canvas,

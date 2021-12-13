@@ -74,10 +74,20 @@
 
 .icon-move-rightdown {
   rotate: 90deg;
+  bottom: -5px;
+  right: -10px;
 }
 
 .icon-turn {
   position: absolute;
   width: 16px;
   top: calc(50% - 8px);
+  left: -8px;
+}
+
+.icon-delete {
+  position: absolute;
+  width: 16px;
+  top: -8px;
+  left: -8px;
 }

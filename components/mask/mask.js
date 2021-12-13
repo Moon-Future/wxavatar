@@ -20,33 +20,27 @@ Component({
       // { id: 3, name: '国旗' }
     ],
     tabCur: 0,
+    pageNo: 1,
+    pageSize: 20,
+    total: 0,
     maskList: [
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-      { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' },
-    ]
+      // { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' }
+    ],
+    loading: false,
+    isPull: true
   },
 
   lifetimes: {
     async ready() {
-      await this.getTabs()
-      const tabs = this.data.tabs
-      if (tabs.length) {
-        await this.getMask(tabs[0].id)
+      this.setData({ loading: true })
+      try {
+        await this.getTabs()
+        const tabs = this.data.tabs
+        if (tabs.length) {
+          await this.getMask(tabs[0].id)
+        }
+      } catch (e) {
+        this.setData({ loading: false })
       }
     }
   },
@@ -55,22 +49,30 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    tabSelect(e) {
+    async tabSelect(e) {
       const index = e.currentTarget.dataset.index
       this.setData({
         tabCur: index
+      })
+      await this.getMask({
+        refresh: true
       })
     },
 
     maskSelect(e) {
       const index = e.currentTarget.dataset.index
-      this.triggerEvent('maskChange', { src: this.data.maskList[index].src })
+      this.triggerEvent('maskSelect', { src: this.data.maskList[index].src })
     },
 
     async getTabs() {
       try {
         const res = await wx.$http({
           url: 'getAvatarAllTab'
+        })
+        const tabs = res.data
+        tabs.unshift({
+          id: 'hot',
+          name: '热门'
         })
         this.setData({ tabs: res.data })
       } catch (e) {
@@ -82,21 +84,49 @@ Component({
       }
     },
 
-    async getMask(tab) {
+    async getMask(opts) {
+      let { pageNo = 1, total = 0 } = opts
+      let maskList = this.data.maskList
+      if (!opts.refresh && total !== 0 && maskList.length >= total) return
       try {
+        this.setData({ loading: true })
         const res = await wx.$http({
           url: 'getAvatarMask',
-          data: { tab }
+          data: { 
+            tab: this.data.tabs[this.data.tabCur].id,
+            pageNo: pageNo,
+            pageSize: this.data.pageSize,
+          }
         })
-        console.log('res', res)
-        this.setData({ maskList: res.data })
+        maskList = opts.refresh ? res.data : maskList.concat(res.data)
+        this.setData({ 
+          maskList,
+          total: res.total,
+          pageNo: pageNo + 1,
+          loading: false
+        })
       } catch (e) {
         console.log(e)
+        this.setData({ loading: false })
         wx.showToast({
           title: '服务器开小差啦😅',
           icon: 'none'
         })
       }
+    },
+
+    async lower(e) {
+      await this.getMask({
+        pageNo: this.data.pageNo,
+        total: this.data.total
+      })
+    },
+
+    async refresh() {
+      await this.getMask({
+        refresh: true
+      })
+      this.setData({ isPull: false })
     }
   }
 })

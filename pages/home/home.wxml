@@ -1,11 +1,11 @@
-<cu-custom bgColor="bg-gradual-blue">
+<!-- <cu-custom bgColor="bg-gradual-blue">
   <view slot="content">美头秀秀</view>
-</cu-custom>
+</cu-custom> -->
 
 
-<view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx)" bindtap="hideControl">
-  <avatar userInfo="{{userInfo}}" id="avatar" style="height:90%"></avatar>
-  <view class="tools-wrapper">
+<view class="userinfo" style="height:calc(100vh - {{CustomBar}}px - 400rpx);margin-top:{{CustomBar}}px" bindtap="hideControl">
+  <avatar class="component-avatar" userInfo="{{userInfo}}" id="avatar" bind:maskOpacity="maskOpacity"></avatar>
+  <view class="tools-wrapper" catchtap="maskClick">
     <view class="opacity-progress" wx:if="{{opacityControl}}">
       <button class="opacity-btn opacity-btn-minus" data-type="minus" bindtap="opacityChange">-</button>
       <view class="cu-progress">
@@ -25,4 +25,4 @@
   </view>
 </view>
 
-<mask bind:maskChange="maskChange"></mask>
+<mask bind:maskSelect="maskSelect"></mask>

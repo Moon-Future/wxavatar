@@ -16,41 +16,42 @@ Component({
    * 组件的初始数据
    */
   data: {
-    maskInfo: {
-      src: '',
-      avatarW: 0,
-      avatarTop: 0,
-      avatarLeft: 0, // 头像 dom
-      w: 0,
-      h: 0,
-      offsetTop: 0,
-      offsetLeft: 0,
-      top: 0,
-      left: 0,
-      x: 0,
-      y: 0,
-      X: 0, // 圆心
-      Y: 0, // 圆心
-      r: 0, // 半径
-      scale: 1,
-      angle: 0,
-      angleHide: 0, // 辅助图片角度，为了计算 left
-      opacity: 1,
-      maskFlag: true,
-      turnFlag: false // 镜像翻转
-    },
-    scaleIcon: {
-      bottom: -5,
-      _bottom: -5,
-      right: -10,
-      _right: -10
-    },
-    turnIcon: {
-      left: -8,
-      _left: -8
-    },
-    controlShow: false,
+    maskList: [],
     avatarDefault: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/default/avatar-detault.png'
+  },
+
+  lifetimes: {
+    ready() {
+      this.maskInfo = {
+        id: '',
+        src: '',
+        avatarW: 0,
+        avatarTop: 0,
+        avatarLeft: 0, // 头像 dom
+        w: 0,
+        h: 0,
+        offsetTop: 0,
+        offsetLeft: 0,
+        top: 0,
+        left: 0,
+        x: 0,
+        y: 0,
+        X: 0, // 圆心
+        Y: 0, // 圆心
+        r: 0, // 半径
+        scale: 1,
+        angle: 0,
+        angleHide: 0, // 辅助图片角度，为了计算 left
+        opacity: 1,
+        maskFlag: true,
+        turnFlag: false, // 镜像翻转
+        zIndex: -1,
+        controlShow: false
+      },
+      this.index = -1
+      this.zIndexMax = 1
+      this.maskId = 1
+    }
   },
 
   /**
@@ -58,19 +59,32 @@ Component({
    */
   methods: {
     touchstart(e) {
-      const maskInfo = this.data.maskInfo
+      const index = e.currentTarget.dataset.index
+      const maskList = this.data.maskList
+      const maskInfo = maskList[index]
       const { clientX, clientY } = e.touches[0]
       this.startTouch = {
         x: clientX, // 移动前坐标点
         y: clientY,
         angle: this.countDeg(maskInfo.x, maskInfo.y, clientX, clientY), // 移动前位置的角度
       }
-      this.setData({ controlShow: true })
+      maskList.forEach(ele => {
+        ele.controlShow = false
+      })
+      maskInfo.controlShow = true
+      if (this.zIndexMax - maskInfo.zIndex > 1) {
+        maskInfo.zIndex = this.zIndexMax
+        this.zIndexMax++
+      }
+      this.index = index
+      this.maskOpacity(maskInfo.opacity * 100)
+      this.setData({ maskList })
     },
 
     touchmove(e) {
-      const type = e.currentTarget.dataset.type
-      const { maskInfo, scaleIcon, turnIcon } = this.data
+      const { index, type } = e.currentTarget.dataset
+      const maskList = this.data.maskList
+      const maskInfo = maskList[index]
       const { clientX, clientY } = e.touches[0]
       this.moveTouch = {
         x: clientX,
@@ -81,9 +95,6 @@ Component({
       if (type === 'scale') {
         // 缩放
         maskInfo.scale = this.moveTouch.dis / maskInfo.r
-        scaleIcon.right = scaleIcon._right + maskInfo.w * (1 - maskInfo.scale) / 2
-        scaleIcon.bottom = scaleIcon._bottom + maskInfo.h * (1 - maskInfo.scale) / 2
-        turnIcon.left = turnIcon._left + maskInfo.w * (1 - maskInfo.scale) / 2
         // 旋转
         maskInfo.angle += this.moveTouch.angle - this.startTouch.angle
         maskInfo.angleHide = -maskInfo.angle
@@ -96,13 +107,10 @@ Component({
         this.startTouch.x = clientX
         this.startTouch.y = clientY
       }
-      this.setData({
-        maskInfo,
-        scaleIcon,
-        turnIcon
-      })
+      this.setData({ maskList })
     },
 
+    // 计算半径
     getDistance(cx, cy, pointer_x, pointer_y) {
       var ox = pointer_x - cx
       var oy = pointer_y - cy
@@ -119,7 +127,6 @@ Component({
       var oy = pointer_y - cy
       var to = Math.abs(ox / oy)
       var angle = (Math.atan(to) / (2 * Math.PI)) * 360
-      // console.log("ox.oy:", ox, oy)
       if (ox < 0 && oy < 0) {
         //相对在左上角，第四象限，js中坐标系是从左上角开始的，这里的象限是正常坐标系
         angle = -angle
@@ -136,28 +143,30 @@ Component({
       return angle
     },
 
-    avatarOnLoad(e) {
-      const maskInfo = this.data.maskInfo
-      if (maskInfo.avatarW) return
+    // 头像加载完成
+    avatarOnLoad() {
+      if (this.maskInfo.avatarW) return
       const query = wx.createSelectorQuery().in(this)
       query
         .select('#avatarImage')
         .boundingClientRect((rect) => {
-          maskInfo.avatarW = rect.width
-          maskInfo.avatarTop = rect.top
-          maskInfo.avatarLeft = rect.left
-          this.setData({ maskInfo })
+          this.maskInfo.avatarW = rect.width
+          this.maskInfo.avatarTop = rect.top
+          this.maskInfo.avatarLeft = rect.left
         })
         .exec()
     },
 
+    // mask加载完成
     imgOnLoad(e) {
+      const index = e.currentTarget.dataset.index
       const query = wx.createSelectorQuery().in(this)
       query
-        .select('#maskImage')
-        .boundingClientRect((rect) => {
-          console.log('rect111', rect)
-          const maskInfo = this.data.maskInfo
+        .selectAll('.maskImage')
+        .boundingClientRect((rectList) => {
+          const rect = rectList[index]
+          const maskList = this.data.maskList
+          const maskInfo = maskList[index]
           maskInfo.w = rect.width
           maskInfo.h = rect.height
           maskInfo.x = rect.left + rect.width / 2
@@ -167,14 +176,28 @@ Component({
           maskInfo.offsetTop = rect.top
           maskInfo.offsetLeft = rect.left
           maskInfo.r = this.getDistance(maskInfo.x, maskInfo.y, maskInfo.offsetLeft, maskInfo.offsetTop)
-          this.setData({ maskInfo })
+          this.setData({ maskList })
         })
         .exec()
     },
 
     // 复位
-    reset(src) {
-      const { maskInfo, scaleIcon, turnIcon } = this.data
+    reset() {
+      const maskList = this.data.maskList
+      if (this.index === -1) {
+        maskList.forEach(ele => {
+          ele = this.maskInfoReset(ele)
+          ele.zIndex = 1
+        })
+        this.zIndexMax = 1
+      } else {
+        maskList[this.index] = this.maskInfoReset(maskList[this.index])
+        maskList[this.index].controlShow = true
+      }
+      this.setData({ maskList })
+    },
+
+    maskInfoReset(maskInfo) {
       maskInfo.top = 0
       maskInfo.left = 0
       maskInfo.x = maskInfo.X
@@ -184,33 +207,70 @@ Component({
       maskInfo.angleHide = 0
       maskInfo.opacity = 1
       maskInfo.turnFlag = false
-      maskInfo.src = src || maskInfo.src
-      scaleIcon.bottom = scaleIcon._bottom
-      scaleIcon.right = scaleIcon._right
-      turnIcon.left = turnIcon._left
+      maskInfo.controlShow =  false
+      return maskInfo
+    },
+
+    // mask选择
+    maskSelect(src) {
+      const maskInfo = JSON.parse(JSON.stringify(this.maskInfo))
+      const maskList = this.data.maskList
+      if (maskList.length >= 5) {
+        wx.showToast({
+          title: '5张就够了嘛，再多会卡的哦~',
+          icon: 'none'
+        })
+        return
+      }
+      if (this.index !== -1) {
+        maskList.forEach(ele => {
+          ele.controlShow = false
+        })
+      }
+      maskInfo.src = src
+      maskInfo.zIndex = this.zIndexMax
+      maskInfo.controlShow = true
+      maskInfo.id = this.maskId
+      maskList.push(maskInfo)
+      this.index = maskList.length - 1
+      this.maskId++
+      this.zIndexMax++
+      this.maskOpacity(100)
       this.setData({
-        maskInfo,
-        scaleIcon,
-        turnIcon,
-        controlShow: true
+        maskList
       })
     },
 
     // 隐藏拖拽框
     hideControl() {
-      this.setData({ controlShow: false })
+      const maskList = this.data.maskList
+      maskList.forEach(ele => {
+        ele.controlShow = false
+      })
+      this.index = -1
+      this.maskOpacity(100)
+      this.setData({ maskList })
     },
 
     // 改变透明度
     changeOpacity(opacity) {
-      const maskInfo = this.data.maskInfo
+      if (this.index === -1) {
+        wx.hideToast({
+          title: '请先选中',
+          icon: 'none'
+        });
+        return
+      }
+      const maskList = this.data.maskList
+      const maskInfo = maskList[this.index]
       maskInfo.opacity = opacity
-      this.setData({ maskInfo })
+      this.setData({ maskList })
     },
 
+    // 绘图保存
     async savaAvatar() {
       const imageCanvas = this.selectComponent('#imageCanvas')
-      const maskInfo = this.data.maskInfo
+      const maskList = JSON.parse(JSON.stringify(this.data.maskList))
       const avatarInfo = {
         src: this.data.userInfo.avatarUrl || this.data.avatarDefault
       }
@@ -219,38 +279,71 @@ Component({
           title: '正在保存...',
           mask: true
         })
-        const query = wx.createSelectorQuery().in(this)
-        query
-          .select('#maskImageHide')
-          .boundingClientRect(async (rect) => {
-            const src = await imageCanvas.saveImage(avatarInfo, { ...maskInfo, left: rect.left - maskInfo.avatarLeft, top: rect.top - maskInfo.avatarTop })
-            wx.saveImageToPhotosAlbum({
-              filePath: src,
-              success() {
-                wx.showToast({
-                  title: '保存成功',
-                  icon: 'none',
-                })
-              },
-              fail() {
-                wx.hideLoading()
-              }
+        maskList.sort((a, b) => {
+          return a.zIndex - b.zIndex
+        })
+        for (let i = 0, len = maskList.length; i < len; i++) {
+          const maskInfo = maskList[i]
+          const rect = await this.boundingClientRect(maskInfo.id)
+          maskInfo.left = rect.left - maskInfo.avatarLeft
+          maskInfo.top = rect.top - maskInfo.avatarTop
+        }
+        const src = await imageCanvas.saveImage(avatarInfo, maskList)
+        wx.saveImageToPhotosAlbum({
+          filePath: src,
+          success() {
+            wx.showToast({
+              title: '保存成功',
+              icon: 'none',
             })
-          })
-          .exec()
+          },
+          fail() {
+            wx.hideLoading()
+          }
+        })
       } catch (e) {
         wx.hideLoading()
         console.log(e)
       }
     },
 
-    maskClick() {},
+    boundingClientRect(id) {
+      return new Promise(resolve => {
+        const query = wx.createSelectorQuery().in(this)
+        query
+          .select(`#maskImageHide-${id}`)
+          .boundingClientRect(rect => {
+            resolve(rect)
+          })
+          .exec()
+      })
+    },
+
+    maskClick() {
+      // 阻止冒泡
+    },
+
+    // 切换mask时更新opacity
+    maskOpacity(value) {
+      this.triggerEvent('maskOpacity', { opacity: value })
+    },
 
     // 镜像翻转
-    turnMask() {
-      const maskInfo = this.data.maskInfo
+    turnMask(e) {
+      const index = e.currentTarget.dataset.index
+      const maskList = this.data.maskList
+      const maskInfo = maskList[index]
       maskInfo.turnFlag = !maskInfo.turnFlag
-      this.setData({ maskInfo })
+      this.setData({ maskList })
+    },
+
+    // 删除
+    deleteMask(e) {
+      const index = e.currentTarget.dataset.index
+      const maskList = this.data.maskList
+      maskList.splice(index, 1)
+      this.maskOpacity(100)
+      this.setData({ maskList })
     }
   },
   
