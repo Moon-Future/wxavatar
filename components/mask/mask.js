@@ -69,12 +69,12 @@ Component({
         const res = await wx.$http({
           url: 'getAvatarAllTab'
         })
-        const tabs = res.data
+        const tabs = res.data || []
         tabs.unshift({
           id: 'hot',
           name: '热门'
         })
-        this.setData({ tabs: res.data })
+        this.setData({ tabs })
       } catch (e) {
         console.log(e)
         wx.showToast({
