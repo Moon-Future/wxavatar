@@ -14,7 +14,7 @@
       <button class="opacity-btn opacity-btn-add" data-type="add" bindtap="opacityChange">+</button>
     </view>
     <view class="btn-group">
-      <block wx:if="{{!hasUserInfo && !userInfo.avatarUrl}}">
+      <block>
         <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile" class="btn-item cu-btn line-blue"> 获取头像 </button>
         <view wx:else> 请使用1.4.4及以上版本基础库 </view>
       </block>

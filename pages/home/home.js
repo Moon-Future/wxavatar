@@ -1,4 +1,5 @@
-const app = getApp();
+const app = getApp()
+const { setNavBar } = require('../../utils/util')
 Page({
 
   /**
@@ -13,15 +14,13 @@ Page({
     opacityControl: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
+
+  onReady: function () {
+    setNavBar(app.globalData)
+    this.setData({
+      CustomBar: app.globalData.CustomBar,
+      canIUseGetUserProfile: wx.getUserProfile ? true : false
+    })
   },
 
   getUserProfile(e) {

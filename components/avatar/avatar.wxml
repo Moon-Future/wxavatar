@@ -5,6 +5,7 @@
 	 src="{{userInfo.avatarUrl || avatarDefault}}"
 	 bindload="avatarOnLoad"
 	 mode="widthFix"
+	 lazy-load="true"
 	/>
 	<view class="avatar-move" wx:for="{{maskList}}" wx:for-item="maskInfo" wx:key="index" style="width:{{maskInfo.cover === 1 ? 'calc(100% + 4px)' : '300rpx'}};scale:{{maskInfo.scale}};rotate:{{maskInfo.angle}}deg;top:{{maskInfo.top}}px;left:{{maskInfo.left}}px;z-index:{{maskInfo.zIndex}}" catchtap="maskClick">
 		<image
