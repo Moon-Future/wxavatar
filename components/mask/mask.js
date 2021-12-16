@@ -26,6 +26,7 @@ Component({
     maskList: [
       // { src: 'https://wxproject-1255423800.cos.ap-guangzhou.myqcloud.com/project_avatar/demo/mask-01.png', name: '圣诞帽' }
     ],
+    initLoading: false,
     loading: false,
     isPull: true
   },
@@ -51,6 +52,7 @@ Component({
   methods: {
     async tabSelect(e) {
       const index = e.currentTarget.dataset.index
+      if (this.data.initLoading || this.data.loading || this.data.tabCur === index) return
       this.setData({
         tabCur: index
       })
@@ -89,7 +91,11 @@ Component({
       let maskList = this.data.maskList
       if (!opts.refresh && total !== 0 && maskList.length >= total) return
       try {
-        this.setData({ loading: true })
+        if (pageNo === 1) {
+          this.setData({ initLoading: true })
+        } else {
+          this.setData({ loading: true })
+        }
         const res = await wx.$http({
           url: 'getAvatarMask',
           data: { 
@@ -103,11 +109,12 @@ Component({
           maskList,
           total: res.total,
           pageNo: pageNo + 1,
+          initLoading: false,
           loading: false
         })
       } catch (e) {
         console.log(e)
-        this.setData({ loading: false })
+        this.setData({ initLoading: false, loading: false })
         wx.showToast({
           title: '服务器开小差啦😅',
           icon: 'none'

@@ -37,3 +37,17 @@
 .mask-body .cu-load.over::after {
 	content: "暂无数据";
 }
+
+.loading-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  opacity: 0.7;
+  height: 340rpx;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
