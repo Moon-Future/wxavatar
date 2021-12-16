@@ -1,7 +1,7 @@
 <view class="mask-container">
   <view class="mask-header">
     <scroll-view scroll-x class="nav" scroll-with-animation scroll-left="{{scrollLeft}}">
-      <view class="cu-item {{index==tabCur?'text-green cur':''}}" wx:for="{{tabs}}" wx:key="index" data-index="{{index}}" bindtap="tabSelect">
+      <view class="cu-item {{index==tabCur?'text-red cur':''}}" wx:for="{{tabs}}" wx:key="index" data-index="{{index}}" bindtap="tabSelect">
         {{item.name}}
       </view>
     </scroll-view>

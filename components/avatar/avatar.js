@@ -347,6 +347,11 @@ Component({
       maskList.splice(index, 1)
       this.maskOpacity(100)
       this.setData({ maskList })
+    },
+
+    getUserProfile() {
+      if (this.data.userInfo.avatarUrl) return
+      this.triggerEvent('getUserProfile')
     }
   },
   

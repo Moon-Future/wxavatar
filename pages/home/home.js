@@ -7,7 +7,6 @@ Page({
    */
   data: {
     userInfo: {},
-    hasUserInfo: false,
     canIUseGetUserProfile: false,
     CustomBar: app.globalData.CustomBar,
     opacity: 100,
@@ -34,8 +33,7 @@ Page({
         avatarUrlArr.push('0')
         res.userInfo.avatarUrl = avatarUrlArr.join('/')
         this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+          userInfo: res.userInfo
         })
       }
     })

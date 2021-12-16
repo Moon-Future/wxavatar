@@ -4,6 +4,7 @@
 	 class="userinfo-avatar"
 	 src="{{userInfo.avatarUrl || avatarDefault}}"
 	 bindload="avatarOnLoad"
+	 bindtap="getUserProfile"
 	 mode="widthFix"
 	 lazy-load="true"
 	/>
